@@ -1,0 +1,59 @@
+CREATE TABLE [Clientes] (
+  [id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [nome] [VARCHAR(45)] NOT NULL, 
+  [telefone] [VARCHAR(20)] NOT NULL, 
+  [endereco] [VARCHAR(60)] NOT NULL);
+
+
+CREATE TABLE [Projetos] (
+  [id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [nome] [VARCHAR(45)] NOT NULL, 
+  [descricao] TEXT NOT NULL, 
+  [data_inicial] DATE NOT NULL, 
+  [data_final] DATE, 
+  [cliente_id] INTEGER NOT NULL CONSTRAINT [cliente_id] REFERENCES [Clientes]([id]));
+
+
+CREATE TABLE [Representantes] (
+  [id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [nome] [VARCHAR(45)] NOT NULL, 
+  [cargo] [VARCHAR(45)] NOT NULL, 
+  [telefone] [VARCHAR(20)] NOT NULL, 
+  [cliente_id] INTEGER NOT NULL CONSTRAINT [cliente_id] REFERENCES [Clientes]([id]));
+
+
+CREATE TABLE [Atividades] (
+  [id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [nome] [VARCHAR(45)] NOT NULL, 
+  [descricao] TEXT NOT NULL, 
+  [data_inicio] DATE NOT NULL, 
+  [data_termino] DATE, 
+  [projeto_id] INTEGER NOT NULL CONSTRAINT [projeto_id] REFERENCES [Projetos]([id]), 
+  [representante_id] INTEGER NOT NULL CONSTRAINT [representante_id] REFERENCES [Representantes]([id]));
+
+
+CREATE TABLE [Usuarios] (
+  [id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [username] [VARCHAR(45)] NOT NULL UNIQUE, 
+  [senha] [VARCHAR(20)] NOT NULL, 
+  [administrador] BOOLEAN NOT NULL DEFAULT 0, 
+  [gerente] BOOLEAN NOT NULL DEFAULT 0);
+
+
+CREATE TABLE [Empregados] (
+  [id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [nome] [VARCHAR(45)] NOT NULL, 
+  [email] [VARCHAR(45)] NOT NULL, 
+  [telefone] [VARCHAR(20)] NOT NULL, 
+  [projeto_id] INTEGER CONSTRAINT [projeto_id] REFERENCES [Projetos]([id]), 
+  [usuario_id] INTEGER NOT NULL CONSTRAINT [usuario_id] REFERENCES [Usuarios]([id]));
+
+
+CREATE TABLE [Relatorios] (
+  [id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+  [data] DATE NOT NULL, 
+  [descricao] TEXT NOT NULL, 
+  [atividade_id] INTEGER NOT NULL CONSTRAINT [atividade_id] REFERENCES [Atividades]([id]), 
+  [empregado_id] INTEGER NOT NULL CONSTRAINT [empregado_id] REFERENCES [Empregados]([id]));
+
+
